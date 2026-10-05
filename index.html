@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一字见心 · 测测你的本命双型</title>
+<style>
+  :root{ --paper:#f6f1e6; --ink:#2b2620; --ink2:#5a5245; --zhu:#a2342c; --gold:#8a6d3b; --line:#d9cfb8; }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{ background:var(--paper); color:var(--ink);
+        font-family:"STKaiti","KaiTi","楷体","Kaiti SC","SimSun",serif;
+        min-height:100vh; }
+  .wrap{ max-width:640px; margin:0 auto; padding:28px 22px 60px; }
+  .screen{ display:none; animation:fade .5s ease; }
+  .screen.on{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
+  .seal{ display:inline-block; border:2px solid var(--zhu); color:var(--zhu);
+         padding:2px 8px; font-size:13px; letter-spacing:4px; border-radius:3px; }
+  h1{ font-size:44px; letter-spacing:14px; margin:26px 0 8px; font-weight:700; }
+  .sub{ color:var(--ink2); font-size:16px; letter-spacing:2px; line-height:1.9; }
+  .intro{ margin:26px 0; padding:18px 20px; border:1px solid var(--line); border-radius:8px;
+          background:#fbf8ef; color:var(--ink2); font-size:15px; line-height:2.0; }
+  .btn{ display:block; width:100%; padding:15px; margin-top:22px; border:none; cursor:pointer;
+        background:var(--zhu); color:#f8f3e6; font-size:19px; letter-spacing:6px;
+        font-family:inherit; border-radius:6px; transition:opacity .2s; }
+  .btn:active{ opacity:.85; }
+  .btn.ghost{ background:none; border:1px solid var(--gold); color:var(--gold); font-size:15px; letter-spacing:2px; }
+  .prog{ height:4px; background:var(--line); border-radius:2px; margin:22px 0 8px; overflow:hidden; }
+  .prog i{ display:block; height:100%; background:var(--zhu); width:0; transition:width .35s ease; }
+  .qnum{ color:var(--gold); font-size:14px; letter-spacing:3px; margin-bottom:14px; }
+  .qtext{ font-size:19px; line-height:1.9; margin-bottom:24px; }
+  .opt{ display:block; width:100%; text-align:left; padding:16px 18px; margin-bottom:14px;
+        background:#fbf8ef; border:1px solid var(--line); border-radius:8px;
+        font-size:16px; line-height:1.8; cursor:pointer; font-family:inherit; color:var(--ink);
+        transition:all .15s; }
+  .opt:hover{ border-color:var(--zhu); }
+  .opt.pick{ background:var(--zhu); color:#f8f3e6; border-color:var(--zhu); }
+  .retitle{ text-align:center; margin:18px 0 4px; }
+  .rechars{ font-size:56px; letter-spacing:18px; color:var(--zhu); font-weight:700; margin:10px 0 2px; }
+  .retag{ color:var(--ink2); font-size:15px; letter-spacing:2px; }
+  .rel{ text-align:center; color:var(--gold); font-size:16px; line-height:1.9; margin:14px 0 6px; }
+  .card{ margin-top:20px; padding:20px; background:#fbf8ef; border:1px solid var(--line); border-radius:8px; }
+  .card h3{ font-size:15px; color:var(--zhu); letter-spacing:4px; margin-bottom:10px; font-weight:700; }
+  .card p{ font-size:15.5px; line-height:2.05; color:var(--ink); }
+  .card ul{ margin:4px 0 0 18px; }
+  .card li{ font-size:15px; line-height:2.0; margin-bottom:4px; }
+  .hint{ text-align:center; color:var(--ink2); font-size:13.5px; margin-top:26px; line-height:2; }
+  .cta-box{ margin-top:26px; text-align:center; }
+  .foot{ margin-top:40px; text-align:center; color:#9a917f; font-size:12px; line-height:1.9; }
+  .backrow{ margin-top:18px; display:flex; justify-content:space-between; color:var(--ink2); font-size:14px; }
+  .backrow span{ cursor:pointer; }
+  .mask{ position:fixed; inset:0; background:rgba(30,24,18,.72); display:none;
+         align-items:center; justify-content:center; z-index:50; padding:18px; }
+  .mask.on{ display:flex; }
+  .modal{ background:#fdfaf2; border-radius:10px; padding:18px 16px; max-width:88vw;
+          max-height:90vh; overflow:auto; text-align:center; box-shadow:0 10px 40px rgba(0,0,0,.4); }
+  .modal img{ max-width:100%; border-radius:6px; display:block; margin:0 auto; }
+  .mtitle{ font-size:14px; color:var(--ink2); margin-bottom:12px; line-height:1.8; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 首页 -->
+  <section id="s-home" class="screen on">
+    <span class="seal">趣味文化测试</span>
+    <h1>一字见心</h1>
+    <p class="sub">廿四问 · 测出你的本命双型<br>典出《说文解字》</p>
+    <div class="intro">
+      东汉许慎著《说文解字》，收九千三百五十三字。<br>
+      每个字，都是一种活法。<br>
+      廿四道古人场景题，不设对错——<br>
+      答你所是，字见其心。
+    </div>
+    <button class="btn" onclick="start()">开 字</button>
+    <p class="foot">结果共九十余种双型 · 撞字即为同门<br>本测试为文化娱乐性质</p>
+  </section>
+
+  <!-- 答题 -->
+  <section id="s-quiz" class="screen">
+    <div class="prog"><i id="bar"></i></div>
+    <div class="qnum" id="qnum"></div>
+    <div class="qtext" id="qtext"></div>
+    <button class="opt" id="optA" onclick="pick(0)"></button>
+    <button class="opt" id="optB" onclick="pick(1)"></button>
+    <div class="backrow"><span onclick="prev()">← 上一问</span><span id="cnt"></span></div>
+  </section>
+
+  <!-- 结果 -->
+  <section id="s-result" class="screen">
+    <div class="retitle"><span class="seal">你的本命双型</span></div>
+    <div class="rechars" id="rechars"></div>
+    <div class="retag" id="retag"></div>
+    <div class="rel" id="rel"></div>
+
+    <div class="card"><h3>性之字 · 主型判词</h3><p id="poemMain"></p></div>
+    <div class="card"><h3>志之字 · 辅型判词</h3><p id="poemSub"></p></div>
+    <div class="card"><h3>当 心</h3><p id="blind"></p></div>
+    <div class="card"><h3>养字三课</h3><ul id="lessons"></ul></div>
+    <div class="card"><h3>道友速配</h3><p id="match"></p></div>
+
+    <div class="cta-box">
+      <button class="btn" onclick="saveCard()">保存结果图</button>
+      <button class="btn ghost" onclick="restart()">再测一次</button>
+    </div>
+    <p class="hint">把你的双型留在评论区——<br>撞字，即为同门道友。</p>
+    <p class="foot">一字见心 · 典出《说文解字》<br>文化趣味测试 · 仅供娱乐</p>
+  </section>
+
+</div>
+
+<script>
+const D = {"poles": ["温", "烈", "言", "行", "稳", "变", "藏", "露", "守", "拓"], "axes": {"温": "烈", "烈": "温", "稳": "变", "变": "稳", "言": "行", "行": "言", "藏": "露", "露": "藏", "守": "拓", "拓": "守"}, "questions": [{"q": "朋友深夜登门，絮絮叨叨说着烦心事，茶都凉了。你更可能：", "a": "续上热水，让茶再暖一轮，陪他把话说完", "b": "起身披衣：「走，这事我陪你理一理」"}, {"q": "计划三日的出行，清晨突降大雨。你：", "a": "改期，雨天自有雨天该做的事", "b": "撑伞就走，雨里的山未必不美"}, {"q": "想到一个好主意，你通常：", "a": "先找个人把想法说道说道", "b": "先动手做出来给人看"}, {"q": "书院派你守一份枯燥差事，三年为期。你：", "a": "熬出秩序来，枯燥里也能绣花", "b": "隔三差五给自己寻点新花样"}, {"q": "祖屋老墙裂缝了。你：", "a": "修补，继续住，墙里有几代人的热气", "b": "拆了重盖，老房子也该晒晒太阳了"}, {"q": "与人起了争执，你更可能：", "a": "当场辩个明白，话不说清睡不着", "b": "先走开，用行动和时间证明"}, {"q": "做成了一件得意事：", "a": "不说，酒香不怕巷子深", "b": "立刻讲给一圈人听，好东西要共享"}, {"q": "朋友垂头丧气进门，你第一句话更可能是：", "a": "「没事，有我呢」", "b": "「谁欺负你了？走，讨个说法去」"}, {"q": "落雪的小院，你更想要：", "a": "炉边温酒，各看各的书，安静也热乎", "b": "雪仗打起，谁也别装大人"}, {"q": "答应帮人写一副字，期限将至，墨还没磨：", "a": "先说一声「要迟两日」，别让人干等", "b": "连夜赶出来，一早亲自送去"}, {"q": "初见陌生人，你通常：", "a": "先递三分笑，话留七分在心里", "b": "三句话就熟络得像多年老友"}, {"q": "学一门新手艺，你更倾向：", "a": "把口诀问透、基本功磨扎实再上手", "b": "直接开练，坏了再修，修着修着就会了"}, {"q": "你练成了一手好字：", "a": "平日收着，关键时刻才亮", "b": "日日清早就在院里练，不怕人看"}, {"q": "远方来信说「世道变了，别来了」。你：", "a": "按原计划去看看，眼见为实", "b": "那就不去，把心意换成别的方式送到"}, {"q": "心里憋着不痛快，你更常：", "a": "写成字、说给人听，说完翻篇", "b": "出门跑十里地，让汗把事冲掉"}, {"q": "一份安稳但一眼望到头的工作摆在你面前：", "a": "接了，把日子过出滋味来", "b": "辞了，去外头撞一撞再说"}, {"q": "有人问「最近在忙什么」，你：", "a": "大致一说，细节留在自己院里", "b": "从想法到进展，摊开来全讲"}, {"q": "老友十年没变，酒桌上还是那个老故事。你：", "a": "挺好，每次都陪他再笑一回", "b": "拉他去个没去过的地儿，造点新故事"}, {"q": "你更欣赏哪种厉害：", "a": "不显山露水，悄悄把事办圆的人", "b": "锋芒毕现，一人一剑挑翻全场的人"}, {"q": "劝一个钻进牛角尖的人：", "a": "坐下来陪他，一句一句理给他听", "b": "拽他出门干件痛快事，事一了人自通"}, {"q": "路过一座无人深山，你更想：", "a": "圈一小块地，慢慢经营出人气", "b": "一路往深处走，看看尽头有什么"}, {"q": "手艺学成，师父说「守好它」。你：", "a": "守着老方子，原原本本传下去", "b": "添些新东西，让它活到今天的人心里"}, {"q": "一条推行多年的旧规矩已不合时宜：", "a": "先守着，等新章程立稳再动", "b": "先干起来，规矩在做事中长出来"}, {"q": "众人面前发言的机会来了：", "a": "能推就推，落在纸上更自在", "b": "站起来就说，说砸了再说"}], "poem": {"温": "你不是没脾气，只是不忍心。别人在局里，你看得见每个人的难，于是话到嘴边会放软三分。你的好不是热络，是让人觉得「待在你旁边，不用设防」。", "烈": "你的爱憎都写在脸上，喜欢就全情投入，看不惯就当场指出。你像明火，靠近的人要么被暖透，要么被燎着。你的锋利是天赋，但火焰需要炉膛。", "稳": "世界是变的，你是那个不变的坐标。你不追风口，不信捷径，认定的事一条道走到底。别人眼中的「慢」，是你的「不返工」。", "变": "你身上有一股活气，计划对你来说只是草稿。环境一变，你比谁都先调整好姿势。你擅长在混乱里找到抓手。", "言": "你靠语言认识世界，也靠语言整理自己。一件事没说清楚之前，你等于还没想过。你的词是你的工具，也是你的锋芒。", "行": "你信一件事：做了才算数。嘴上赢不算赢，做出来的才算。你身上有股拙劲，肯下笨功夫。", "藏": "你习惯把底牌收在袖子里，不是心机，是不确定的事不想声张。你的力量是蓄出来的，出手时才让人惊觉。", "露": "你不怕被人看，做得好就摆出来，这是一种坦荡。你的存在感是亮出来的，也照亮了身边的人。", "守": "你心里有不可让渡的东西：一句承诺、一门手艺、一个人。守，是你表达爱的方式。你不轻易开始，开始了就不轻易结束。", "拓": "你无法忍受「就这样了」。边界对你来说就是用来推的，舒适区是用来离开的。你的生命力在向外生长。"}, "poem_sub": {"温": "你不是没脾气，只是不忍心。看得见每个人的难，话到嘴边会放软三分。你的好不是热络，是让人觉得待在你旁边不用设防。", "烈": "爱憎写在脸上，喜欢就全情投入，看不惯当场指出。像明火，靠近的人要么被暖透要么被燎着。锋利是天赋，但火焰需要炉膛。", "稳": "世界是变的，你是不变的坐标。不追风口，认定的事一条道走到底。你的「慢」，其实是「不返工」。", "变": "身上有股活气，计划对你只是草稿。环境一变你先调整姿势，擅长在混乱里找抓手。", "言": "靠语言认识世界，也靠语言整理自己。没说清之前等于没想过。词是你的工具，也是锋芒。", "行": "信一件事：做了才算数。肯下笨功夫，身上有股拙劲。", "藏": "底牌收在袖子里，不是心机，是不确定的事不声张。力量是蓄出来的。", "露": "不怕被看，做得好就摆出来。存在感亮出来，也照亮身边的人。", "守": "心里有不可让渡的东西：一句承诺、一门手艺、一个人。不轻易开始，开始了不轻易结束。", "拓": "无法忍受「就这样了」。边界是用来推的，舒适区是用来离开的。"}, "blind": {"温": "温度给了太多人，容易凉了自己。你的付出常被当作理所当然——学会把暖留一份给那个从不讨要的人：你自己。", "烈": "火焰需要炉膛。别在最亲近的人面前烧：脱口而出的话收三秒，烈就成了暖。", "稳": "稳过头了，会把新路当成歪路。每季度逼自己试一件「不稳」的小事，给坐标系留个更新口。", "变": "变得太快，身边人跟不上，会误以为你不可靠。大方向先说一声再变，变就成了引领，不是飘忽。", "言": "说得太快，容易把没成熟的想法说成承诺。出口前加一句「我先想想」，反而更有分量。", "行": "只做不说，你的好要很久才被人看见。每月一次，把做的事说出来——不是炫耀，是让人知道往哪找你。", "藏": "藏得太久，有人会忘了你也会。该亮的时候亮一半，机会需要坐标。", "露": "露得太多，容易招来无谓的局。光芒要有，阴影也要留——三分留白，是对自己的保护。", "守": "守的东西若不更新，会变成困住你的壳。每年问一次：我守的是初心，还是习惯？", "拓": "拓得太急，容易丢了根据地。回头看看，也有人需要你守——后方稳，前方才远。"}, "lessons": {"温": ["今天认真听完一个人把话说完，不插话不打断", "给一位很久没联系的朋友发一条不带目的的消息", "对服务人员多说一次谢谢，看着对方的眼睛"], "烈": ["想发火前默数三秒，把「你错了」换成「我担心」", "本周为喜欢的人和事全情投入一次，不计回报", "指出别人问题前，先当众说一条他的好"], "稳": ["把最重要的事写下来，每天雷打不动推进半小时", "拒绝一个看似热闹的机会，守好主线", "给计划留一成弹性，试试不慌"], "变": ["列一个「可以推翻的清单」，每周挑一条重估", "主动约一个不同圈子的朋友聊聊", "大动作前先跟身边人同步一次"], "言": ["把一个想法讲给三个人听，一次比一次短而清", "写下本周说过的漂亮话，逐条兑现", "听一次反对意见，忍住不反驳"], "行": ["选一件拖了很久的小事，今天做完它", "做完一件事打个卡，攒出一面墙", "带一个只说不做的人，做成一件小事"], "藏": ["把练了很久的本事，主动亮给一个人看", "在会议上发言一次，说砸也说", "记下自己的三个成绩，每月回看"], "露": ["做一次「不晒」的努力，做完只对自己说声好", "分享前想一想：对别人有用，还是只为亮", "把舞台让一次给别人，自己当回观众"], "守": ["检查你守的东西：还值得吗？写下三条理由", "兑现一个说过没做的小承诺", "把你守了多年的事，教给一个人"], "拓": ["做一件让你轻微害怕的小事", "把一个边界往外推一格：新工具、新地方或新朋友", "给一年后的自己写一句：幸好我当时试了"]}, "match": {"温": ["烈", "文火配明火——你焐热人心，他点亮全场；你的稳托住他的冲，他的烈暖你的场。"], "烈": ["稳", "烈火入炉膛——你的猛需要他的恒，他的稳需要你的热；一快一慢，刚刚好。"], "稳": ["变", "锚配帆——你定住底盘，他带你去新水域；稳而不僵，变而不飘。"], "变": ["守", "流水绕山——你负责开路，他负责守成；变的是打法，不变的是阵地。"], "守": ["拓", "根与枝——你守住后院，他开疆拓土；后方安稳，前方才敢远。"], "拓": ["温", "开拓者有港湾——你往外冲，他给你留灯；走得再远，回来有热饭。"], "言": ["行", "说的遇上做的——你把蓝图讲清，他把蓝图落地；言出行随，无往不利。"], "行": ["言", "做的遇上有嘴的——你闷头赶路，他替你发声；腿与舌，本是一对。"], "藏": ["露", "出鞘与归鞘——你的锋需要他的光来试，他的光需要你的藏来养；一收一放，方成器。"], "露": ["藏", "光与鞘——你照亮前路，他守住退路；亮得出去，收得回来。"]}, "rel": {"温|烈": "你的暖是文火，他的烈是明火；慢炖与爆炒，同桌吃饭刚好。", "温|稳": "温是情，稳是骨；你不是没脾气，是不忍心。", "温|变": "你心里留着暖，脚下踩着风。", "温|言": "你的温度，靠说，也靠听。", "温|行": "少说多做，是你表达温柔的方式。", "温|藏": "温而不炫，是更有分量的暖。", "温|露": "暖就要让人看见，你不吝于发光。", "温|守": "你的温柔有边界，给得起，也收得回。", "温|拓": "温厚其内，开拓其外。", "烈|稳": "火在炉中，才烧得长久。", "烈|变": "风助火势，你一动，全场就热。", "烈|言": "你的火从嘴里出来，一句话能点燃人。", "烈|行": "先干了再说，火光从来不等。", "烈|藏": "火山不语，喷发时惊人。", "烈|露": "锋芒毕现，你的烈从不隔夜。", "烈|守": "有底线的热烈，才不会烧成荒原。", "烈|拓": "一把火烧出去，烧出条新路。", "稳|变": "锚与帆，你两样都有。", "稳|言": "话不多，但每句都算数。", "稳|行": "一步一步，是你的表态。", "稳|藏": "深水静流，你的稳自带屏障。", "稳|露": "稳是你的底盘，露是你的舞台。", "稳|守": "守住阵地，就是你的攻城。", "稳|拓": "站稳了再出发，走得比谁都远。", "变|言": "脑子转得快，嘴追得上。", "变|行": "变动身就到，你是第一个动的人。", "变|藏": "千变万化，底牌却不给人看。", "变|露": "变是你的常态，亮是你的选择。", "变|守": "万变中守着一条主线，难得。", "变|拓": "变是方向盘，拓是油门。", "言|行": "说到与做到之间，你两头都占。", "言|藏": "说七分留三分，是你的分寸。", "言|露": "语不惊人死不休。", "言|守": "一诺千金，你的嘴就是你的碑。", "言|拓": "用语言开路的人。", "行|藏": "做了不说，是你的习惯。", "行|露": "做给人看，也做给自己看。", "行|守": "行动有界，不越雷池。", "行|拓": "用脚步丈量边界，再把它推远。", "藏|露": "收放之间，是你的节奏。", "藏|守": "藏锋守拙，后发制人。", "藏|拓": "安静地扩张，是你的打法。", "露|守": "亮出底线，才有真正的自由。", "露|拓": "你出现的地方，就是拓出来的地方。", "守|拓": "守是根，拓是枝。"}};
+const AXES = D.axes, Q = D.questions, POLES = D.poles;
+const A_POLES = ["温", "稳", "言", "稳", "守", "言", "藏", "温", "温", "言", "温", "稳", "藏", "变", "言", "守", "藏", "稳", "藏", "温", "守", "守", "守", "藏"];
+const B_POLES = ["烈", "变", "行", "变", "拓", "行", "露", "烈", "烈", "行", "烈", "变", "露", "稳", "行", "拓", "露", "变", "露", "烈", "拓", "拓", "行", "露"];
+let idx = 0, ans = [];
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on'); window.scrollTo(0,0); }
+function start(){ idx=0; ans=[]; render(); show('s-quiz'); }
+function restart(){ show('s-home'); }
+function render(){
+  const q = Q[idx];
+  document.getElementById('bar').style.width = (idx/Q.length*100)+'%';
+  document.getElementById('qnum').textContent = '第 '+(idx+1)+' 问 / 廿四';
+  document.getElementById('qtext').textContent = q.q;
+  document.getElementById('optA').textContent = q.a;
+  document.getElementById('optB').textContent = q.b;
+  document.getElementById('optA').className = 'opt'+(ans[idx]===0?' pick':'');
+  document.getElementById('optB').className = 'opt'+(ans[idx]===1?' pick':'');
+  document.getElementById('cnt').textContent = idx+1+' / '+Q.length;
+}
+function pick(i){
+  ans[idx]=i;
+  const a=document.getElementById('optA'), b=document.getElementById('optB');
+  a.className='opt'+(i===0?' pick':''); b.className='opt'+(i===1?' pick':'');
+  setTimeout(()=>{ idx++; idx<Q.length ? render() : result(); }, 260);
+}
+function prev(){ if(idx>0){ idx--; render(); } }
+function result(){
+  const c={}; POLES.forEach(p=>c[p]=0);
+  ans.forEach((v,i)=>{ const pole=(v===0?A_POLES[i]:B_POLES[i]); c[pole]++; });
+  // 主型：得分最高（并列按 POLES 顺序）
+  let main=POLES[0]; POLES.forEach(p=>{ if(c[p]>c[main]) main=p; });
+  // 辅型：不同维度中最高
+  const opp = AXES[main]; let sub=null, best=0;
+  POLES.forEach(p=>{ if(p!==main && p!==opp && c[p]>best){ best=c[p]; sub=p; } });
+  let balanced=false;
+  if(sub===null || best===0){ sub=opp; balanced=true; }
+  renderResult(main, sub, balanced);
+}
+let CUR = {main:'温', sub:'拓', balanced:false};
+
+function wrapText(ctx, text, maxW){
+  const lines=[]; let line='';
+  for(const ch of text){
+    if(ch==='\n' || ctx.measureText(line+ch).width > maxW){ lines.push(line); line = ch==='\n' ? '' : ch; }
+    else line += ch;
+  }
+  if(line) lines.push(line);
+  return lines;
+}
+function drawChars(ctx, text, cx, y, font, color, gap){
+  ctx.font=font; ctx.fillStyle=color; ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+  const ws=[...text].map(ch=>ctx.measureText(ch).width);
+  const total=ws.reduce((a,b)=>a+b,0)+gap*(text.length-1);
+  let x=cx-total/2;
+  [...text].forEach((ch,i)=>{ ctx.fillText(ch,x,y); x+=ws[i]+gap; });
+}
+function saveCard(){
+  const {main, sub, balanced} = CUR;
+  const W=750, H=1334, S=2;
+  const cv=document.createElement('canvas'); cv.width=W*S; cv.height=H*S;
+  const ctx=cv.getContext('2d'); ctx.scale(S,S);
+  // 纸底
+  ctx.fillStyle='#f6f1e6'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(162,52,44,.85)'; ctx.lineWidth=2.5; ctx.strokeRect(30,30,W-60,H-60);
+  ctx.lineWidth=1; ctx.strokeRect(42,42,W-84,H-84);
+  const KAI='"KaiTi","STKaiti","楷体","Kaiti SC",serif';
+  ctx.textAlign='center';
+  // 顶部
+  drawChars(ctx,'一字见心',W/2,150,'700 44px '+KAI,'#a2342c',10);
+  ctx.font='24px '+KAI; ctx.fillStyle='#8a6d3b';
+  ctx.fillText('趣味文化测试 · 廿四问 · 典出《说文解字》', W/2, 200);
+  // 双型大字
+  drawChars(ctx, main+' · '+sub, W/2, 360,'700 150px '+KAI,'#a2342c',14);
+  ctx.font='26px '+KAI; ctx.fillStyle='#5a5245';
+  ctx.fillText(balanced ? '平衡格 · 两股气质相持，稀有之数' : '主字为「'+main+'」 · 辅字为「'+sub+'」', W/2, 415);
+  // 关系句
+  const rel = balanced ? '双极相持，自成一格——此谓「'+main+sub+'既济」。' : D.rel[[main,sub].sort().join('|')];
+  ctx.font='28px '+KAI; ctx.fillStyle='#8a6d3b';
+  wrapText(ctx, rel, 560).slice(0,3).forEach((l,i)=>ctx.fillText(l, W/2, 480+i*44));
+  // 分隔
+  ctx.strokeStyle='#d9cfb8'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(120,600); ctx.lineTo(330,600); ctx.moveTo(420,600); ctx.lineTo(630,600); ctx.stroke();
+  drawChars(ctx,'◆',W/2,608,'16px '+KAI,'#a2342c',0);
+  let y=668;
+  // 主判词
+  ctx.font='24px '+KAI; ctx.fillStyle='#a2342c'; ctx.textAlign='left';
+  ctx.fillText('【 主型判词 】', 88, y); y+=24;
+  ctx.font='27px '+KAI; ctx.fillStyle='#2b2620';
+  wrapText(ctx, D.poem[main], 574).slice(0,6).forEach(l=>{ y+=44; ctx.fillText(l, 88, y); });
+  y+=58;
+  // 辅判词
+  ctx.font='24px '+KAI; ctx.fillStyle='#a2342c'; ctx.fillText('【 辅型判词 】', 88, y); y+=22;
+  ctx.font='25px '+KAI; ctx.fillStyle='#5a5245';
+  wrapText(ctx, D.poem_sub[sub], 574).slice(0,3).forEach(l=>{ y+=40; ctx.fillText(l, 88, y); });
+  y+=58;
+  // 速配
+  ctx.font='24px '+KAI; ctx.fillStyle='#a2342c'; ctx.fillText('【 道友速配 】', 88, y); y+=22;
+  ctx.font='25px '+KAI; ctx.fillStyle='#2b2620';
+  wrapText(ctx, '「'+D.match[main][0]+'」型道友 —— '+D.match[main][1], 574).slice(0,3)
+    .forEach(l=>{ y+=40; ctx.fillText(l, 88, y); });
+  // 页脚
+  ctx.textAlign='center'; ctx.font='22px '+KAI; ctx.fillStyle='#9a917f';
+  ctx.fillText('撞字即为同门道友', W/2, H-96);
+  ctx.fillText(new Date().toLocaleDateString('zh-CN'), W/2, H-64);
+  window.__cardURL = cv.toDataURL('image/png');
+  document.getElementById('cardImg').src = window.__cardURL;
+  document.getElementById('mask').classList.add('on');
+}
+function closeModal(){ document.getElementById('mask').classList.remove('on'); }
+function downloadPNG(){
+  const a=document.createElement('a');
+  a.href=window.__cardURL; a.download='一字见心_'+CUR.main+CUR.sub+'.png';
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+function renderResult(main, sub, balanced){
+  CUR={main, sub, balanced};
+  const key=[main,sub].sort().join('|');
+  document.getElementById('rechars').textContent = main+' · '+sub;
+  document.getElementById('retag').textContent = balanced ? '平衡格 · 两股气质相持，稀有之数'
+      : '主字为「'+main+'」· 辅字为「'+sub+'」';
+  document.getElementById('rel').textContent = balanced
+      ? '双极相持，自成一格——此谓「'+main+sub+'既济」。'
+      : D.rel[key];
+  document.getElementById('poemMain').textContent = D.poem[main];
+  document.getElementById('poemSub').textContent = D.poem_sub[sub];
+  document.getElementById('blind').textContent = D.blind[main];
+  document.getElementById('lessons').innerHTML = D.lessons[main].map(l=>'<li>'+l+'</li>').join('');
+  document.getElementById('match').textContent = '「'+D.match[main][0]+'」型道友 —— '+D.match[main][1];
+  show('s-result');
+}
+</script>
+<div class="mask" id="mask">
+  <div class="modal">
+    <p class="mtitle">长按图片保存到相册<br>或点击下方按钮下载</p>
+    <img id="cardImg" alt="一字见心判词卡">
+    <button class="btn" onclick="downloadPNG()">下载图片</button>
+    <button class="btn ghost" onclick="closeModal()">关闭</button>
+  </div>
+</div>
+</body>
+</html>
